@@ -11,22 +11,14 @@ jobs:
           name: Build application Docker image
           command: |
             docker build --cache-from=app -t app .
-  test:
-    docker:
-      - image: docker:18.09.0-git
-    steps:
       - run:
           name: Run Container
           command: |
-            alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -v "$(pwd):/project" -v "${HOME}/.aws:/root/.aws" nmemoto/aws-cli' 
-            if [ "$(aws --version)" != "${CIRCLE_TAG}" ]; then
+            alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -v "$(pwd):/project" -v "${HOME}/.aws:/root/.aws" app' 
+            if ![ aws --version | grep "${CIRCLE_TAG}" ]; then
               exit 1
             fi
-  deploy:
-    docker:
-      - image: docker:18.09.0-git
-    steps:
-      - deploy:
+      - run:
           name: Push Docker image
           command: |
               docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
@@ -37,18 +29,6 @@ workflows:
   build-test-and-deploy:
     jobs:
       - build:
-          filters:
-            tags:
-              only: /^[0-9.]+$/
-      - test:
-          requires:
-            - build
-          filters:
-            tags:
-              only: /^[0-9.]+$/
-      - deploy:
-          requires:
-            - test
           filters:
             tags:
               only: /^[0-9.]+$/
