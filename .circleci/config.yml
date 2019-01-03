@@ -32,7 +32,7 @@ jobs:
               git config --global user.name "Takafumi Umemoto"
               git config --global user.email "takafumi.umemoto@gmail.com"
               git add Dockerfile .circleci/config.yml
-              git commit -m "Update $latest_version"
+              git commit -m "Update $latest_version [ci skip]"
               git tag $latest_version
               git push origin master
               git push origin $latest_version
@@ -73,6 +73,8 @@ workflows:
           filters:
             tags:
               only: /^[0-9.]+$/
+            branches:
+              ignore: /.*/
   commit:
     jobs:
       - check:
