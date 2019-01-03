@@ -29,9 +29,10 @@ jobs:
             if [ "$AWSCLI_LATEST_VERSION" != "$latest_version" ]; then  
               sed -i -e "s/AWSCLI_LATEST_VERSION: [0-9.][0-9.]*$/AWSCLI_LATEST_VERSION: $latest_version/" .circleci/config.yml
               sed -i -e "s/^ENV AWS_CLI_VERSION \"[0-9.][0-9.]*\"$/ENV AWS_CLI_VERSION \"$latest_version\"/" Dockerfile
+              sed -i -e "s/\(https:\/\/img.shields.io\/badge\/version-\)[0-9.][0-9.]*\(-brightgreen.svg\)/\1$latest_version\2/" README.md
               git config --global user.name "Takafumi Umemoto"
               git config --global user.email "takafumi.umemoto@gmail.com"
-              git add Dockerfile .circleci/config.yml
+              git add Dockerfile .circleci/config.yml README.md
               git commit -m "Update $latest_version [ci skip]"
               git tag $latest_version
               git push origin master
@@ -64,7 +65,9 @@ jobs:
           command: |
               docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
               docker tag app "nmemoto/aws-cli:${CIRCLE_TAG}"
+              docker tag app "nmemoto/aws-cli:latest"
               docker push "nmemoto/aws-cli:${CIRCLE_TAG}"
+              docker push nmemoto/aws-cli:latest
 workflows:
   version: 2
   build-run-and-push:
