@@ -22,6 +22,11 @@ https://hub.docker.com/r/nmemoto/aws-cli
         $ alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -v /$PWD:/project -v //c/users/nmemoto/.aws:/root/.aws nmemoto/aws-cli'
         ```
 
+    - プロキシ下の設定例
+        ```
+        $ alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -v "$(pwd):/project" -v "${HOME}/.aws:/root/.aws" -e HTTP_PROXY=http://xxxxx:8080 -e HTTPS_PROXY=http://xxxxx:8080 nmemoto/aws-cli'
+        ```
+
 1. 通常と同じように AWS CLI を使用する
     ```
     $ aws --version
