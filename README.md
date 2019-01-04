@@ -10,13 +10,19 @@ https://hub.docker.com/r/nmemoto/aws-cli
     ```
     $ docker pull nmemoto/aws-cli
     ```
-2. aws にエイリアスを設定する
+1. aws にエイリアスを設定する
+    
+    - Mac, Linuxの設定例
+        ```
+        $ alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -v "$(pwd):/project" -v "${HOME}/.aws:/root/.aws" nmemoto/aws-cli'
+        ```
 
-    以下は クレデンシャルファイルが ${HOME}/.aws/ にある場合の設定例
-    ```
-    $ alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -v "$(pwd):/project" -v "${HOME}/.aws:/root/.aws" nmemoto/aws-cli'
-    ```
-3. 通常と同じように AWS CLI を使用する
+    - Windows(Mingw) の設定例
+        ```
+        $ alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -v /$PWD:/project -v //c/users/nmemoto/.aws:/root/.aws nmemoto/aws-cli'
+        ```
+
+1. 通常と同じように AWS CLI を使用する
     ```
     $ aws --version
     aws-cli/1.16.82 Python/3.6.6 Linux/4.9.125-linuxkit botocore/1.12.72
