@@ -54,10 +54,10 @@ jobs:
           command: |
             docker build --cache-from=app -t app .
       - run:
-          name: Run Container
+          name: Run & Test Container
           command: |
             alias aws='docker run --rm -t $(tty &>/dev/null && echo "-i") -v "$(pwd):/project" -v "${HOME}/.aws:/root/.aws" app' 
-            if ![ aws --version | grep "${CIRCLE_TAG}" ]; then
+            if [ $(aws --version | grep "${CIRCLE_TAG}") -eq 0 ]; then
               exit 1
             fi
       - run:
