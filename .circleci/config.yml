@@ -3,29 +3,17 @@ jobs:
   check:
     working_directory: ~/workspace
     docker:
-      - image: circleci/node:10.15-browsers
+      - image: docker:18.09.3-git
     environment:
       AWSCLI_LATEST_VERSION: 1.16.133
     steps:
       - checkout
       - setup_remote_docker: 
          docker_layer_caching: true 
-      - restore_cache:
-          key: latest_version_check-{{ checksum "latest_version_check/package-lock.json" }}
-      - run:
-          name: System information
-          command: |
-            echo "Node $(node -v)"
-      - run:
-          name: Install dependencies
-          working_directory: ~/workspace/latest_version_check
-          command: npm install
       - run:
           name: Check Version
-          working_directory: ~/workspace
           command: |
-            node latest_version_check/index.js
-            latest_version=$(cat version)
+            latest_version=$(docker run --rm nmemoto/grlr aws/aws-cli)
             if [ "$AWSCLI_LATEST_VERSION" != "$latest_version" ]; then  
               sed -i -e "s/AWSCLI_LATEST_VERSION: [0-9.][0-9.]*$/AWSCLI_LATEST_VERSION: $latest_version/" .circleci/config.yml
               sed -i -e "s/^ENV AWS_CLI_VERSION \"[0-9.][0-9.]*\"$/ENV AWS_CLI_VERSION \"$latest_version\"/" Dockerfile
@@ -38,14 +26,10 @@ jobs:
               git push origin master
               git push origin $latest_version
             fi
-      - save_cache:
-          key: latest_version_check-{{ checksum "latest_version_check/package-lock.json" }}
-          paths:
-            - ~/workspace/latest_version_check/node_modules
   build:
     working_directory: /app
     docker:
-      - image: docker:18.09.0-git
+      - image: docker:18.09.3-git
     steps:
       - checkout
       - setup_remote_docker
