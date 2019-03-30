@@ -8,8 +8,8 @@ jobs:
       AWSCLI_LATEST_VERSION: 1.16.135
     steps:
       - checkout
-      - setup_remote_docker: 
-         docker_layer_caching: true 
+      - setup_remote_docker:
+          docker_layer_caching: true
       - run:
           name: Check Version
           command: |
@@ -32,9 +32,10 @@ jobs:
       - image: docker:18.09.3-git
     steps:
       - checkout
-      - setup_remote_docker
+      - setup_remote_docker:
+          docker_layer_caching: true 
       - run:
-          name: Build application Docker image
+          name: Build Application Docker image
           command: |
             docker build --cache-from=app -t app .
       - run:
@@ -45,7 +46,7 @@ jobs:
               exit 1
             fi
       - run:
-          name: Push Docker image
+          name: Push Docker Image
           command: |
               docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}
               docker tag app "nmemoto/aws-cli:${CIRCLE_TAG}"
