@@ -1,5 +1,5 @@
 # Docker AWS CLI
-![Alt text](https://img.shields.io/badge/version-1.16.143-brightgreen.svg)
+![Alt text](https://img.shields.io/badge/version-1.16.144-brightgreen.svg)
 [![CircleCI](https://circleci.com/gh/nmemoto/docker-aws-cli/tree/master.svg?style=svg)](https://circleci.com/gh/nmemoto/docker-aws-cli/tree/master)
 
 Dockerコンテナで最新のAWS CLIを利用する
