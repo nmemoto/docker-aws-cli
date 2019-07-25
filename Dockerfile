@@ -1,5 +1,5 @@
 FROM alpine:3.9
-ENV AWS_CLI_VERSION "1.16.204"
+ENV AWS_CLI_VERSION "1.16.205"
 ADD https://bootstrap.pypa.io/get-pip.py /tmp
 RUN apk -v --update add \
         python3 \
